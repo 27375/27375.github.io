@@ -23,5 +23,4 @@ jobs:
         PUBLISH_BRANCH: gh-pages
         PUBLISH_DIR: ./public
 
-
-name: github pages
+name: github pages 2
