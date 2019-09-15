@@ -1,0 +1,35 @@
+name: github pages
+
+on:
+  push:
+    branches:
+    - source  # default branch
+
+PUBLISH_BRANCH: master  # deploying branch
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Install Hugo
+      env:
+        HUGO_VERSION: '0.58.2'
+      run: |
+        mkdir /tmp/hugo && cd /tmp/hugo
+        curl -L https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-64bit.tar.gz | \
+          tar -xz && \
+          sudo mv ./hugo /usr/local/bin/
+
+    - name: Build
+      run: hugo --gc --minify --cleanDestinationDir
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v2.3.0
+      env:
+        #ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #PUBLISH_BRANCH: gh-pages
+        PUBLISH_BRANCH: master
+        PUBLISH_DIR: ./public
